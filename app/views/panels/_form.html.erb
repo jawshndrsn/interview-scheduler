@@ -1,0 +1,45 @@
+<%= form_for(@panel) do |f| %>
+  <% if @panel.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@panel.errors.count, "error") %> prohibited this panel from being saved:</h2>
+
+      <ul>
+      <% @panel.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :candidate %><br />
+    <%= f.text_field :candidate %>
+  </div>
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :position %><br />
+    <%= f.text_field :position %>
+  </div>
+  <div class="field">
+    <%= f.label :date %><br />
+    <%= f.date_select :date %>
+  </div>
+  
+  <% index = 0 %>
+  <% @sessions.each do |sh| %>
+      <div class="field">
+        <%= label :session, sessionTimeLabel(sh.start_time, sh.end_time) %><br/>
+        <%= select :session, "#{index}[pool_id]", poolNames, :selected => sh.pool_id %>
+        <%= hidden_field :session, "#{index}[start]", :value => sh.start_time %>
+        <%= hidden_field :session, "#{index}[end]", :value => sh.end_time %>
+      </div>
+      <% index += 1 %>
+  <% end %>
+  
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

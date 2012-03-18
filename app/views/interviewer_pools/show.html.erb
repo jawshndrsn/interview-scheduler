@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @interviewer_pool.name %>
+</p>
+
+<p>
+  <b>Interviewers:</b>
+  <%= @interviewer_pool.interviewers.map { |i| i.name }.join(", ") %>
+</p>
+
+
+<%= link_to 'Edit', edit_interviewer_pool_path(@interviewer_pool) %> |
+<%= link_to 'Back', interviewer_pools_path %>

@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  panel: 
+  start: 2012-03-13 14:42:08
+  end: 2012-03-13 14:42:08
+  interviewer: 
+  rejected_interviewers: 
+  state: 1
+
+two:
+  panel: 
+  start: 2012-03-13 14:42:08
+  end: 2012-03-13 14:42:08
+  interviewer: 
+  rejected_interviewers: 
+  state: 1

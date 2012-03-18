@@ -1,0 +1,28 @@
+<%= form_for(@interviewer_pool) do |f| %>
+  <% if @interviewer_pool.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@interviewer_pool.errors.count, "error") %> prohibited this interviewer_pool from being saved:</h2>
+
+      <ul>
+      <% @interviewer_pool.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  
+  <ul class="checkbox-list">
+  <% Interviewer.all.each do |interviewer| %>
+    <li><%= check_box_tag "interviewer_pool[interviewer_ids][]", interviewer.id, has_interviewer(@interviewer_pool, interviewer) %> <%= interviewer.name %></li>
+    <% end %>
+  </ul>
+  
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

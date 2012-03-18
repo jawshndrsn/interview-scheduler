@@ -1,0 +1,30 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Candidate:</b>
+  <%= @panel.candidate %>
+</p>
+
+<p>
+  <b>Email:</b>
+  <%= @panel.email %>
+</p>
+
+<p>
+  <b>Position:</b>
+  <%= @panel.position %>
+</p>
+
+<p>
+  <b>Date:</b>
+  <%= @panel.date %>
+</p>
+
+<% @panel.sessions.each do |s| %>
+  <p>
+    <%= s.start %> - <%= s.end %> : <%= s.interviewer == nil ? "pending" : s.interviewer.name %>
+  </p>
+<% end %>
+
+<%= link_to 'Edit', edit_panel_path(@panel) %> |
+<%= link_to 'Back', panels_path %>

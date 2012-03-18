@@ -1,0 +1,29 @@
+<h1>Interviewer Pools</h1>
+
+<p>
+Interview pools group interviewers by topics or specialities. 
+</p>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Interviewers</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @interviewer_pools.each do |interviewer_pool| %>
+  <tr>
+    <td><%= interviewer_pool.name %></td>
+    <td><%= interviewer_pool.interviewers.map { |i| i.name }.join(", ") %></td>
+    <td><%= link_to 'Show', interviewer_pool %></td>
+    <td><%= link_to 'Edit', edit_interviewer_pool_path(interviewer_pool) %></td>
+    <td><%= link_to 'Destroy', interviewer_pool, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Interviewer pool', new_interviewer_pool_path %>
