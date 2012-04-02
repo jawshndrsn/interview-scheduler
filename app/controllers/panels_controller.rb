@@ -1,4 +1,10 @@
+require 'auth_controller'
+
+require './lib/calendar/GoogleCalendar'
+
 class PanelsController < ApplicationController
+  before_filter AuthFilter
+
   class NewHelper
     def initialize(session, start_time, end_time, pool_id = 0)
       @session = session
@@ -7,15 +13,14 @@ class PanelsController < ApplicationController
       @pool_id = pool_id
     end
     
-    attr_reader :session, :start_time, :end_time, :panel_name, :pool_id
-    attr_writer :session, :start_time, :end_time, :panel_name, :pool_id
+    attr_accessor :session, :start_time, :end_time, :panel_name, :pool_id
   end
     
   # GET /panels
   # GET /panels.json
   def index
     @panels = Panel.all
-
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @panels }
@@ -26,14 +31,17 @@ class PanelsController < ApplicationController
   # GET /panels/1.json
   def show
     @panel = Panel.find(params[:id])
-
+    
+    cal = GoogleCalendar.new(AuthController.gclient)
+    InterviewerScheduler.new(cal).update_status(@panel.sessions[0])
+    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @panel }
     end
   end
 
-  helper :all
+  #helper :all
   # GET /panels/new
   # GET /panels/new.json
   def new
@@ -86,10 +94,12 @@ class PanelsController < ApplicationController
         ActiveRecord::Base.transaction do
           @panel.sessions.each do |s|
             #INTERVIEWS_SCHEDULER.schedule(s)
-            InterviewerScheduler.new.schedule(s)
+            
+            #InterviewerScheduler.new(AuthController.gclient).schedule(s)
+            cal = GoogleCalendar.new(AuthController.gclient)
+            InterviewerScheduler.new(cal).schedule(s)
           end
           
-          #raise "booooo!"
           @panel.save!
         end
       end

@@ -4,6 +4,7 @@ Interviews::Application.routes.draw do
   resources :panels
   resources :interviewer_pools
   resources :interviewers
+  resources :auth
 
   get "home/index"
 

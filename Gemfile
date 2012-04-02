@@ -39,3 +39,4 @@ gem 'jquery-rails'
 # gem 'ruby-debug'
 
 gem 'valid_email'
+gem 'google-api-client'

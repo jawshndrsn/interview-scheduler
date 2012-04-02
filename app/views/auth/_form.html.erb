@@ -1,0 +1,12 @@
+<!-- better way to determine path? -->
+<%= form_tag '/auth', :method => :post do %>
+  <!-- should put errors here -->
+  
+  <p>
+    <%= label_tag :auth_code %>
+    <%= text_field_tag :auth_code %>
+  </p>
+  <p>
+    <%= submit_tag 'Authorize' %>
+  </p>
+<% end %>

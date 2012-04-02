@@ -1,3 +1,5 @@
+require './app/models/interviewer.rb'
+
 class Session < ActiveRecord::Base
   UNSCHEDULED = 0 # hasn't been assigned an interviewer yet
   PENDING     = 1 # interviewer calendar invite not accepted yet
@@ -13,11 +15,21 @@ class Session < ActiveRecord::Base
   belongs_to :panel
   belongs_to :interviewer_pool
   belongs_to :interviewer
-  has_and_belongs_to_many :rejected_interviewers, :class_name => :interviewer
+  has_and_belongs_to_many :rejected_interviewers, :class_name => 'Interviewer', :join_table => :sessions_rejected_interviewers
   
   after_initialize :init
   
   def init
     self.rejected_interviewers ||= []
+  end
+  
+  # this can't be the best way to do this
+  def self.stateName(state)
+    case state
+    when UNSCHEDULED then "UNSCHEDULED"
+    when PENDING then "PENDING"
+    when CONFIRMED then "CONFIRMED"
+    when FAILED then "FAILED"
+    end
   end
 end

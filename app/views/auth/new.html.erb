@@ -1,0 +1,9 @@
+<h1>User Authorization</h1>
+
+<p>
+  In order to continue, you must authorize this application to access your calendar. Please do this by following the link below to get an access code, and then paste the code into the form below. 
+</p>
+
+<%= link_to 'Get authorization code', @authorization_uri.to_s %>
+
+<%= render 'form' %>

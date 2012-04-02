@@ -20,9 +20,16 @@
   <%= @panel.date %>
 </p>
 
+<p>
+  <b>State:</b>
+  <%= panel_state(@panel) %>
+</p>
+
 <% @panel.sessions.each do |s| %>
   <p>
-    <%= s.start %> - <%= s.end %> : <%= s.interviewer == nil ? "pending" : s.interviewer.name %>
+    <%= s.start %> - <%= s.end %> :
+    <%= interviewer_name(s.interviewer) %>
+    (<%= Session.stateName(s.state) %>)
   </p>
 <% end %>
 

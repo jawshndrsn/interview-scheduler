@@ -7,14 +7,18 @@ module PanelsHelper
     InterviewerPool.all.map {|p| [p.name, p.id]}
   end
   
-  def panelState(panel)
+  def panel_state(panel)
     states = panel.sessions.map { |s| s.state }
     if(states.index {|s| s != Session::CONFIRMED}.nil?)
       "ok"
     elsif(!states.index(Session::FAILED).nil?)
-      "error"
+      "error - some sessions could not be scheduled"
     else
-      "pending"
+      "pending - has unconfirmed sessions"
     end
+  end
+  
+  def interviewer_name(interviewer)
+    interviewer.nil? ? 'none' : interviewer.name
   end
 end

@@ -1,11 +1,16 @@
 == The Modest, Experimental Interview Scheduler
 
-This is my first rails app, so consider it to be on giant rough edge.
+This is my first rails app, so consider it to be one giant rough edge.
 
 This provides a rails webapp for scheduling interviews for potential job candidates.
 
 == Missing in action
 
-1. Integration with Google Calendar
-2. Database constraints
-3. Tests of any kind
+1. Database constraints
+2. Tests of any kind
+
+== Integrating with Google Calendar
+
+The app uses the Google Calendar API to schedule interviews. Doing this requires registering an application that can connect via the Google APIs. Once this is done, the client id and secret provided by Google must be overriden in config/initializers/oath_config.rb.
+
+See https://code.google.com/apis/console#access to register a client.

@@ -34,4 +34,7 @@ Interviews::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+  
+  # Don't want to restart server when libs change
+  #config.autoload_paths += %W(#{config.root}/lib)
 end

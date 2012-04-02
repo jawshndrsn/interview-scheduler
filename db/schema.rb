@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120316211326) do
+ActiveRecord::Schema.define(:version => 20120402021313) do
+
+  create_table "calendar_credentials", :force => true do |t|
+    t.string   "name"
+    t.string   "authorization_code"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
 
   create_table "interviewer_pool_memberships", :force => true do |t|
     t.integer  "interviewer_id"
@@ -79,10 +87,16 @@ ActiveRecord::Schema.define(:version => 20120316211326) do
     t.datetime "created_at",               :null => false
     t.datetime "updated_at",               :null => false
     t.integer  "interviewer_pool_id"
+    t.string   "external_id"
   end
 
   add_index "sessions", ["interviewer_id"], :name => "index_sessions_on_interviewer_id"
   add_index "sessions", ["panel_id"], :name => "index_sessions_on_panel_id"
   add_index "sessions", ["rejected_interviewers_id"], :name => "index_sessions_on_rejected_interviewers_id"
+
+  create_table "sessions_rejected_interviewers", :id => false, :force => true do |t|
+    t.integer "session_id"
+    t.integer "interviewer_id"
+  end
 
 end
