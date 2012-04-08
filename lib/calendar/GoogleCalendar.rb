@@ -62,6 +62,27 @@ class GoogleCalendar < Calendar
     raise "Error deleting event: #{result.data.to_json}" if !result.body.nil? && !result.data['error'].nil?
   end
   
+  def freebusy(usersOrCalendarIds, from, to)
+    items = usersOrCalendarIds.map {|uc| {'id' => uc}}
+    
+    fb_map = {'timeMin' => from.to_datetime.rfc3339,
+              'timeMax' => to.to_datetime.rfc3339,
+              'items' => items}
+    result = @gclient.execute(:api_method => @capi.freebusy.query,
+                              :body => JSON.dump(fb_map),
+                              :headers => {'Content-Type' => 'application/json'})
+    raise "Error getting freebusy for #{usersOrCalendarIds}: #{result.data.to_json}" if !result.data['error'].nil?
+    
+    cals = result.data['calendars']
+    tuples = usersOrCalendarIds.map {|uc|
+      c = cals[uc]
+      raise "Error getting freebusy for #{uc}: #{c.errors}" if !c.errors.empty?
+      [uc, c.busy.empty?]
+    }
+    
+    Hash[tuples]
+  end
+  
   private
   def calendarId(summary)
     result = @gclient.execute(:api_method => @capi.calendar_list.list)
