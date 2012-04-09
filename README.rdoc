@@ -8,6 +8,10 @@ This provides a rails webapp for scheduling interviews for potential job candida
 
 1. Database constraints
 2. Tests of any kind
+3. Proper algorithm for assigning free interviewers to panels (ideally interviewer only once per panel)
+4. Editing panels after creation
+5. Flexibility on panels (how many sessions, varying session lengths)
+6. Multiple interviewers per session
 
 == Integrating with Google Calendar
 
