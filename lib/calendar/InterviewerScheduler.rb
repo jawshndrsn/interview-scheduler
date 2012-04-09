@@ -46,11 +46,11 @@ class InterviewerScheduler
     end
   end
   
-  private
+  private  
   def create_cal_event(session)
     all_interviewers = session.interviewer_pool.interviewers
-    available = all_interviewers - session.rejected_interviewers
-      
+    available = free_interviewers(all_interviewers - session.rejected_interviewers, session)
+    
     if(available.empty?)
       session.state = Session::FAILED
     else
@@ -73,5 +73,12 @@ class InterviewerScheduler
     
     create_cal_event(session)
     session.save!
+  end
+  
+  def free_interviewers(interviewers, session)
+    email_interviewer = Hash[interviewers.map {|i| [i.email, i]}]
+    free = Set.new(@calendar.freebusy(email_interviewer.keys, session.start, session.end).select {|_, free| free}.keys)
+    email_interviewer.keep_if {|e,_| free.include?(e) }
+    email_interviewer.values
   end
 end

@@ -27,11 +27,11 @@
 
 <% @panel.sessions.each do |s| %>
   <p>
-    <%= s.start %> - <%= s.end %> :
+    <%= @tz.to_local(s.start.to_datetime) %> - <%= @tz.to_local(s.end.to_datetime) %> :
     <%= interviewer_name(s.interviewer) %>
     (<%= Session.stateName(s.state) %>)
   </p>
 <% end %>
 
-<%= link_to 'Edit', edit_panel_path(@panel) %> |
+<!-- <%= link_to 'Edit', edit_panel_path(@panel) %> | -->
 <%= link_to 'Back', panels_path %>

@@ -1,9 +1,12 @@
 require 'auth_controller'
+require 'tzinfo'
 
 require './lib/calendar/GoogleCalendar'
 
 class PanelsController < ApplicationController
   before_filter AuthFilter
+
+  @@tz = TZInfo::Timezone.get('America/Los_Angeles').current_period
 
   class NewHelper
     def initialize(session, start_time, end_time, pool_id = 0)
@@ -31,9 +34,11 @@ class PanelsController < ApplicationController
   # GET /panels/1.json
   def show
     @panel = Panel.find(params[:id])
+    @tz = @@tz
     
     cal = GoogleCalendar.new(AuthController.gclient)
-    InterviewerScheduler.new(cal).update_status(@panel.sessions[0])
+    scheduler = InterviewerScheduler.new(cal)
+    @panel.sessions.each {|s| scheduler.update_status(s)}
     
     respond_to do |format|
       format.html # show.html.erb
@@ -47,13 +52,11 @@ class PanelsController < ApplicationController
   def new
     @panel = Panel.new
     
-    tz = "America/Los_Angeles"
     starts = [10, 11, 13, 14, 15]
-    now = DateTime.now
     @sessions = []
     for st in starts      
       s = @panel.sessions.new(:panel => @panel,
-                              :state => 123)
+                              :state => Session::UNSCHEDULED)
       @sessions << NewHelper.new(s, st, st + 1)
     end
     
@@ -79,8 +82,10 @@ class PanelsController < ApplicationController
     (0...sessionsParams.size).each do |i|
       sessionParams = sessionsParams[i.to_s]
       pool = InterviewerPool.find(sessionParams[:pool_id])
-      sstart = DateTime.new(@panel.date.year, @panel.date.mon, @panel.date.mday, sessionParams[:start].to_i, 0, 0)
-      send = DateTime.new(@panel.date.year, @panel.date.mon, @panel.date.mday, sessionParams[:end].to_i, 0, 0)
+      
+      tz_s = @@tz.abbreviation.to_s
+      sstart = DateTime.new(@panel.date.year, @panel.date.mon, @panel.date.mday, sessionParams[:start].to_i, 0, 0, tz_s)
+      send = DateTime.new(@panel.date.year, @panel.date.mon, @panel.date.mday, sessionParams[:end].to_i, 0, 0, tz_s)
       s = @panel.sessions.new(:panel => @panel,
                               :interviewer_pool => pool,
                               :start => sstart,
@@ -93,9 +98,6 @@ class PanelsController < ApplicationController
       begin
         ActiveRecord::Base.transaction do
           @panel.sessions.each do |s|
-            #INTERVIEWS_SCHEDULER.schedule(s)
-            
-            #InterviewerScheduler.new(AuthController.gclient).schedule(s)
             cal = GoogleCalendar.new(AuthController.gclient)
             InterviewerScheduler.new(cal).schedule(s)
           end
